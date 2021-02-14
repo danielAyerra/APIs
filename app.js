@@ -1,12 +1,16 @@
-var express = require('express');
+const express = require('express');
 
-var router = require('./routes');
+const router = require('./routes');
 
-var app = express();
+const cors = require('cors');
+
+const app = express();
 
 // view engine setup
 
 app.use(express.json());
+
+app.use(cors());
 
 app.use('/', router);
 

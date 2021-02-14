@@ -8,7 +8,7 @@
 //PostMethod -> Uses post request for getting information
 
 const port = "3000";
-const server = "http://localhost/peliculas";
+const server = "http://localhost";
 
 function postMethod() {
 	let req="POST "+server+":"+port;
@@ -17,29 +17,9 @@ function postMethod() {
 //GetMethod -> Uses get request for getting information
 function getMethod(){
 	const req=server+":"+port;
-	const info = new Promise(function (resolve, reject) {
-    	var xhr = new XMLHttpRequest();
-    	xhr.open('GET', req);
-    	xhr.onload = function () {
-    		if (this.status >= 200 && this.status < 300) {
-       		 	resolve(xhr.response);
-      	} else {
-        	reject({
-          		status: this.status,
-          	statusstatusText: xhr.statusText
-        	});
-      	}
-    	};
-    	xhr.onerror = function () {
-      		reject({
-        		status: this.status,
-        		statusText: xhr.statusText
-      		});
-    	};
-        xhr.send();
-    
-  }).then(response=>{console.log(response);})
-	.catch(err=>{console.log(err);});
+	fetch(req,{mode:'cors'})
+	.then(response=>console.log(response.json()))
+	.catch(err=>console.error(err));
 }
 
 //PutMethod -> Uses put request for sending information
