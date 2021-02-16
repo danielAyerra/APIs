@@ -20,18 +20,18 @@ function getMethod(reqType){
 	let req;
 	if(!reqType){
 		req=server+":"+port;
-		console.log(req);	
 	}
 	else{
 		req=server+':'+port+'/'+reqType;
-		console.log(req);
 	}
 	fetch(req,{mode:'cors'})
 	.then(response=>{
-		if(response.ok){
-			console.log(response.json());
+		if(response.ok===true){
+			response.json().then(res=>{
+				return res;
+			});
 		} else{
-			console.error('Error. Status code: '+ response.status);
+			console.error('Error. Status code: '+ response.status + ' '+ response.statusText);
 		}
 	})
 	.catch(err=>{console.error(err);});
