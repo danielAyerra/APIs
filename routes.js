@@ -21,4 +21,20 @@ router.get('/', function(req, res, next){
 	res.status(200).send(mockData);
 });
 
+router.post('/:type/:id', function (req, res, next){
+	const reqType = req.params.type;
+	console.log(reqType);
+	const id = req.params.id;
+	console.log(req.body);
+	console.log(id);
+	if(mockData.hasOwnProperty(reqType)){
+		const rawData = req.body;
+		console.log(rawData);
+		res.status(200).send("ok");
+	}
+	else{
+		res.status(400).json({message:"Unrecognized request"});
+	}
+});
+
 module.exports = router;

@@ -10,10 +10,21 @@
 const port = "3000";
 const server = "http://localhost";
 
-
-function postMethod() {
-	let req="POST "+server+":"+port;
+//PostMethod -> Uses post request for getting information
+function postMethod(reqType, newObj, id) {
+	if (!reqType||!newObj){
+		console.error("Unable to do the request");
+	} else {
+		console.log(reqType, newObj);
+		const req=server+':'+port+'/'+reqType+'/'+id;
+		fetch(req,{mode:'no-cors', method:'POST', headers:{'Content-type':'application/json'}, body: JSON.stringify(newObj)})
+			.then(response=>{
+				console.log(response);
+			})
+			.catch(err=>{console.error(err);});
+	}
 }
+
 
 //GetMethod -> Uses get request for getting information
 function getMethod(reqType){
