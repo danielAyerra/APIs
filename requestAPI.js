@@ -10,16 +10,31 @@
 const port = "3000";
 const server = "http://localhost";
 
+
 function postMethod() {
 	let req="POST "+server+":"+port;
 }
 
 //GetMethod -> Uses get request for getting information
-function getMethod(){
-	const req=server+":"+port;
+function getMethod(reqType){
+	let req;
+	if(!reqType){
+		req=server+":"+port;
+		console.log(req);	
+	}
+	else{
+		req=server+':'+port+'/'+reqType;
+		console.log(req);
+	}
 	fetch(req,{mode:'cors'})
-	.then(response=>console.log(response.json()))
-	.catch(err=>console.error(err));
+	.then(response=>{
+		if(response.ok){
+			console.log(response.json());
+		} else{
+			console.error('Error. Status code: '+ response.status);
+		}
+	})
+	.catch(err=>{console.error(err);});
 }
 
 //PutMethod -> Uses put request for sending information
