@@ -49,13 +49,20 @@ router.put('/:type/:id', function (req, res, next) {
 router.delete('/:type/:id', function (req, res, next) {
 	const reqType = req.params.type;
 	const id = req.params.id;
+	console.log(reqType);
+	console.log(mockData.hasOwnProperty(reqType));
 	if(mockData.hasOwnProperty(reqType)){
-		if(mockData[reqType].hasOwnProperty(id)){
-			res.status(200).json({message: "Deleted Succesfully"});
-		}
-		else{
-			res.status(404).json({message: "Not found resource"});
-		}
+		for(let i=0;i<mockData[reqType].length;i++){
+			const el = mockData[reqType][i];
+			console.log(el['id']);	
+			if(el['id']==id){
+				console.log("enter if");
+				mockData[reqType].splice(i,1);
+				res.status(200).json({message: "Deleted Succesfully"});
+				return;
+			}
+		}		
+		res.status(404).json({message: "Not found resource"});
 	}
 	else{
 		res.status(400).json({message:"Unrecognized request"});
