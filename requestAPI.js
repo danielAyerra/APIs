@@ -17,12 +17,14 @@ function getMethod(reqType){
 		req=server+":"+port;
 	}
 	else{
-		req=server+':'+port+'/'+reqType;
+		req=`${server}:${port}/${reqType}`;
 	}
 	fetch(req,{mode:'cors'})
 	.then(response=>{
 		if(response.ok===true){
 			response.json().then(res=>{
+				console.log('a00');
+				console.log(res);
 				return res;
 			}).catch(err=>console.error(err));
 		} else{
@@ -36,8 +38,8 @@ function getMethod(reqType){
 function putMethod(reqType, newObj, id){
 	if (!reqType||!newObj){
 		console.error("Unable to do the request");
-	} else {
-		const req=server+':'+port+'/'+reqType+'/'+id;
+	}else{
+		const req=`${server}:${port}/${reqType}/${id}`;
 		fetch(req,
 			{	mode:'cors', 
 				method:'PUT', 
@@ -46,17 +48,17 @@ function putMethod(reqType, newObj, id){
 				}, 
 				body: JSON.stringify(newObj)
 			}
-
 			).then(response=>{
 				if(response.ok===true){
 					response.json().then(res=>{
+						console.log(res);
 						return res;
 					}).catch(err=>console.error(err));
 				} else{
 					console.error('Error. Status code: '+ response.status + ' '+ response.statusText);
 				}
 			})
-			.catch(err=>console.error(err));
+			.catch(err=>{console.error(err);});
 	}
 }
 
@@ -65,7 +67,7 @@ function postMethod(reqType, newObj, id){
 	if (!reqType||!newObj){
 		console.error("Unable to do the request");
 	} else {
-		const req=server+':'+port+'/'+reqType+'/'+id;
+		const req=`${server}:${port}/${reqType}/${id}`;
 		fetch(req,
 			{	mode:'cors', 
 				method:'POST', 
@@ -79,6 +81,7 @@ function postMethod(reqType, newObj, id){
 			{
 				if(response.ok===true){
 					response.json().then(res=>{
+						console.log(res);
 						return res;
 					}).catch(err=>console.error(err));
 				} else{
@@ -103,6 +106,7 @@ function deleteMethod(reqType, id){
 		).then(response=>{
 			if(response.ok===true){
 				response.json().then(res=>{
+					console.log(res);
 					return res;
 				}).catch(err=>console.error(err));
 			} else{
@@ -110,4 +114,5 @@ function deleteMethod(reqType, id){
 			}
 		})
 		.catch(err=>{console.error(err);});
+	}
 }
