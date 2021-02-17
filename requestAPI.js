@@ -10,8 +10,21 @@
 const port = "3000";
 const server = "http://localhost";
 
+
+const getMethod = async function(reqType){
+	let req;
+	if(!reqType){
+		req=server+":"+port;
+	}
+	else{
+		req=`${server}:${port}/${reqType}`;
+	}
+	const response = await fetch(req,{mode:'cors'})
+
+	return response.json();
+}
 //GetMethod -> Uses get request for getting information
-function getMethod(reqType){
+/*const getMethod = function(reqType){
 	let req;
 	if(!reqType){
 		req=server+":"+port;
@@ -23,19 +36,21 @@ function getMethod(reqType){
 	.then(response=>{
 		if(response.ok===true){
 			response.json().then(res=>{
-				console.log('a00');
 				console.log(res);
 				return res;
 			}).catch(err=>console.error(err));
 		} else{
 			console.error('Error. Status code: '+ response.status + ' '+ response.statusText);
+			return {message: 'Failed'};
 		}
 	})
-	.catch(err=>{console.error(err);});
-}
+	.catch(err=>{console.error(err);
+		return {message: 'Failed'}
+	});
+}*/
 
 //PutMethod -> Uses put request for sending information
-function putMethod(reqType, newObj, id){
+const putMethod = function (reqType, newObj, id){
 	if (!reqType||!newObj){
 		console.error("Unable to do the request");
 	}else{
@@ -63,7 +78,7 @@ function putMethod(reqType, newObj, id){
 }
 
 //PostMethod -> Uses post request for getting information
-function postMethod(reqType, newObj, id){
+const postMethod = function (reqType, newObj, id){
 	if (!reqType||!newObj){
 		console.error("Unable to do the request");
 	} else {
@@ -93,7 +108,7 @@ function postMethod(reqType, newObj, id){
 }
 
 //DeleteMethod -> Uses delete request for deleting information
-function deleteMethod(reqType, id){
+const deleteMethod = function(reqType, id){
 	if (!reqType||!id){
 		console.error("Unable to do the request");
 	} else {
@@ -116,3 +131,4 @@ function deleteMethod(reqType, id){
 		.catch(err=>{console.error(err);});
 	}
 }
+
