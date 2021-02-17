@@ -3,13 +3,42 @@
 <head>
 	<title>Your favourite Videoclub is here!</title>
 	<script type="text/javascript" src="requestAPI.js"></script>
+	<script type="text/javascript">
+		window.onload = async function(){
+			const res = await getMethod();
+			console.log(res);
+			classifyInfo(res);
+			console.log("Get Information");
+		}
+
+		const classifyInfo = function(data){
+			let content='';
+			if(data['peliculas']&&data['clasificaciones']){
+				const movies=data['peliculas'];
+				const classes=data['clasificaciones'];
+				for(let i=0;i<classes.length;i++){
+					const clasMovies = searchInfo(movies, classes[i].nombre);
+					content+=`<li>${classes[i].nombre} <ul>`;
+					for(let j=0;j<clasMovies.length;j++){
+						content+=`<li>${clasMovies[j].nombre}</li>`;
+					}
+					content+='</ul></li>';
+				}
+			}
+			console.log(content);
+			document.getElementById('movieList').innerHTML=content;
+		}
+
+		const searchInfo = function(data, term){
+			const returnElement = data.filter(el=>el['clasificacion']==term);
+			return returnElement;
+		}
+	</script>
 </head>
 <body>
 	<header>
-		<title>
 			<h1>WeinmanClub</h1>
 			<h2>Movies. Movies Everywhere</h2>
-		</title>
 		<nav></nav>
 	</header>
 	<main>
@@ -20,7 +49,7 @@
 			</article>
 		</section>
 		<section>
-			<ul>
+			<ul id="movieList">
 				<li>Lista de pelis traídas desde mock server</li>
 			</ul>
 		</section>
