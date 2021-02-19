@@ -26,8 +26,9 @@ router.post('/:type/:id', function (req, res, next) {
 	const id = req.params.id;
 	const rawData = req.body;
 	if(mockData.hasOwnProperty(reqType)){
-		mockData[reqType].push(rawData);
-		res.status(200).json({message: "Added Succesfully"});	}
+		const index = mockData[reqType].indexOf(el=>el.id===id);
+		mockData[reqType][index]=rawData;
+		res.status(200).json({message: "Edited Succesfully"});	}
 	else{
 		res.status(400).json({message:"Unrecognized request"});
 	}
