@@ -4,11 +4,11 @@
 	<title>Your favourite Videoclub is here!</title>
 	<script type="text/javascript" src="requestAPI.js"></script>
 	<script type="text/javascript">
+		let dataRaw;
 		window.onload = async function(){
 			const res = await getMethod();
-			console.log(res);
+			dataRaw = res;
 			classifyInfo(res);
-			console.log("Get Information");
 		}
 
 		const classifyInfo = function(data){
@@ -25,7 +25,6 @@
 					content+='</ul></li>';
 				}
 			}
-			console.log(content);
 			document.getElementById('movieList').innerHTML=content;
 		}
 
@@ -33,6 +32,48 @@
 			const returnElement = data.filter(el=>el['clasificacion']==term);
 			return returnElement;
 		}
+
+		const addCategory = function(name){
+			const oldCategories = getCategories();
+			const newCategories=oldCategories;
+			newCategories.push({'nombre':name, 'id':oldCategories.length});
+			const newList = dataRaw;
+			newList['clasificaciones']=newCategories;
+			classifyInfo(newList);
+			putMethod('clasificaciones', newCategories[newCategories.length-1], newCategories.length);
+			dataRaw=newList;
+		}
+
+		const getCategories = function(){
+
+			return dataRaw['clasificaciones'];
+		}
+
+		const getCategoryId = function(name){
+			const categories = getCategories();
+			let id=-1;
+			categories.forEach(cat=> {
+				if(cat.nombre==name){
+					id=cat.id;
+				}
+			});
+			return id;
+		}
+
+		const deleteCategory = function(name){
+			const categories = getCategories();
+			const dCat = getCategoryId(name);
+			if(dCat!=-1){
+				categories.splice(categories.findIndex(cat=>cat.id===dCat));
+				deleteMethod('clasificaciones', dCat);
+				dataRaw['clasificaciones']=categories;
+				classifyInfo(dataRaw);
+			}
+			else{
+				console.error('Category does not exist');
+			}
+		}
+
 	</script>
 </head>
 <body>
