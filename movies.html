@@ -33,44 +33,52 @@
 			return returnElement;
 		}
 
-		const addCategory = function(name){
-			const oldCategories = getCategories();
-			const newCategories=oldCategories;
-			newCategories.push({'nombre':name, 'id':oldCategories.length});
-			const newList = dataRaw;
-			newList['clasificaciones']=newCategories;
-			classifyInfo(newList);
-			putMethod('clasificaciones', newCategories[newCategories.length-1], newCategories.length);
-			dataRaw=newList;
+		const addElement = function(type, ...args){//nombre, director, clasificación
+			try{
+				const oldElements = getElements(type);
+				const newElements=oldElements;
+				if(type==='clasificaciones'&&args.length===1){
+					newElements.push({'nombre':args[0], 'id':oldElements.length+1});
+					console.log(newElements);
+				} else if(type==='peliculas'&&args.length===3){						newElements.push({'nombre':args[0], 'director':args[1], 'clasificacion':args[2], 'id':oldElements.length});
+				} else {
+					throw new Error('Bad parameter pass.')
+				}				
+				const newList = dataRaw;
+				newList[type]=newElements;
+				classifyInfo(newList);
+				putMethod(type, newElements[newElements.length-1], newElements.length);
+				dataRaw=newList;
+			}catch(err){console.error(err.message);}
 		}
 
-		const getCategories = function(){
+		const getElements = function(type){
 
-			return dataRaw['clasificaciones'];
+			return dataRaw[type];
 		}
 
-		const getCategoryId = function(name){
-			const categories = getCategories();
+		const getElementId = function(name, type){
+			const elements = getElements(type);
 			let id=-1;
-			categories.forEach(cat=> {
-				if(cat.nombre==name){
-					id=cat.id;
+			elements.forEach(el=> {
+				if(el.nombre==name){
+					id=el.id;
 				}
 			});
 			return id;
 		}
 
-		const deleteCategory = function(name){
-			const categories = getCategories();
-			const dCat = getCategoryId(name);
-			if(dCat!=-1){
-				categories.splice(categories.findIndex(cat=>cat.id===dCat));
-				deleteMethod('clasificaciones', dCat);
-				dataRaw['clasificaciones']=categories;
+		const deleteElement = function(name, type){
+			const elements = getElements(type);
+			const dEl = getElementId(name, type);
+			if(dEl!=-1){
+				elements.splice(elements.findIndex(el=>el.id===dEl),1);
+				deleteMethod(type, dEl);
+				dataRaw[type]=elements;
 				classifyInfo(dataRaw);
 			}
 			else{
-				console.error('Category does not exist');
+				console.error('Element does not exist');
 			}
 		}
 
