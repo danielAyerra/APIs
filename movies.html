@@ -1,139 +1,149 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Your favourite Videoclub is here!</title>
-	<script type="text/javascript" src="requestAPI.js"></script>
-	<script type="text/javascript">
-		let dataRaw;
-		window.onload = async function(){
-			const res = await getMethod();
-			dataRaw = res;
-			classifyInfo(res);
-		}
+	<head>
+		<title>Your favourite Videoclub is here!</title>
+		<script type="text/javascript" src="requestAPI.js"></script>
+		<script type="text/javascript">
+			let dataRaw;
+			window.onload = async function(){
+				const res = await getMethod();
+				dataRaw = res;
+				classifyInfo(res);
+			}
 
-		const classifyInfo = function(data){
-			let content='';
-			if(data['peliculas']&&data['clasificaciones']){
-				const movies=data['peliculas'];
-				const classes=data['clasificaciones'];
-				for(let i=0;i<classes.length;i++){
-					const clasMovies = searchInfo(movies, classes[i].nombre);
-					content+=`<li>${classes[i].nombre} <ul>`;
-					for(let j=0;j<clasMovies.length;j++){
-						content+=`<li>${clasMovies[j].nombre}</li>`;
+			const classifyInfo = function(data){
+				let content='';
+				if(data['peliculas']&&data['clasificaciones']){
+					const movies=data['peliculas'];
+					const classes=data['clasificaciones'];
+					for(let i=0;i<classes.length;i++){
+						const clasMovies = searchInfo(movies, classes[i].nombre);
+						content+=`<li>${classes[i].nombre} <ul>`;
+						for(let j=0;j<clasMovies.length;j++){
+							content+=`<li>${clasMovies[j].nombre}</li>`;
+						}
+						content+='</ul></li>';
 					}
-					content+='</ul></li>';
+				}
+				document.getElementById('mainBody_movies_movieList').innerHTML=content;
+			}
+
+			const searchInfo = function(data, term){
+				const returnElement = data.filter(el=>el['clasificacion']==term);
+				return returnElement;
+			}
+
+			const addElement = function(type, ...args){//nombre, director, clasificación
+				try{
+					const oldElements = getElements(type);
+					const newElements=oldElements;
+					if(type==='clasificaciones'&&args.length===1){
+						newElements.push({'nombre':args[0], 'id':oldElements.length+1});
+						console.log(newElements);
+					} else if(type==='peliculas'&&args.length===3){						
+						newElements.push({'nombre':args[0], 'director':args[1], 'clasificacion':args[2], 'id':oldElements.length+1});
+						console.log(newElements)
+					} else {
+						throw new Error('Bad parameter pass.')
+					}				
+					const newList = dataRaw;
+					newList[type]=newElements;
+					classifyInfo(newList);
+					putMethod(type, newElements[newElements.length-1], newElements.length);
+					dataRaw=newList;
+				}catch(err){console.error(err.message);}
+			}
+
+			const getElements = function(type){
+
+				return dataRaw[type];
+			}
+
+			const getElementId = function(name, type){
+				const elements = getElements(type);
+				let id=-1;
+				elements.forEach(el=> {
+					if(el.nombre==name){
+						id=el.id;
+					}
+				});
+				return id;
+			}
+
+			const deleteElement = function(name, type){
+				const elements = getElements(type);
+				const dEl = getElementId(name, type);
+				if(dEl!=-1){
+					elements.splice(elements.findIndex(el=>el.id===dEl),1);
+					deleteMethod(type, dEl);
+					dataRaw[type]=elements;
+					classifyInfo(dataRaw);
+				}
+				else{
+					console.error('Element does not exist');
 				}
 			}
-			document.getElementById('movieList').innerHTML=content;
-		}
 
-		const searchInfo = function(data, term){
-			const returnElement = data.filter(el=>el['clasificacion']==term);
-			return returnElement;
-		}
-
-		const addElement = function(type, ...args){//nombre, director, clasificación
-			try{
-				const oldElements = getElements(type);
-				const newElements=oldElements;
-				if(type==='clasificaciones'&&args.length===1){
-					newElements.push({'nombre':args[0], 'id':oldElements.length+1});
-					console.log(newElements);
-				} else if(type==='peliculas'&&args.length===3){						
-					newElements.push({'nombre':args[0], 'director':args[1], 'clasificacion':args[2], 'id':oldElements.length+1});
-					console.log(newElements)
-				} else {
-					throw new Error('Bad parameter pass.')
-				}				
-				const newList = dataRaw;
-				newList[type]=newElements;
-				classifyInfo(newList);
-				putMethod(type, newElements[newElements.length-1], newElements.length);
-				dataRaw=newList;
-			}catch(err){console.error(err.message);}
-		}
-
-		const getElements = function(type){
-
-			return dataRaw[type];
-		}
-
-		const getElementId = function(name, type){
-			const elements = getElements(type);
-			let id=-1;
-			elements.forEach(el=> {
-				if(el.nombre==name){
-					id=el.id;
-				}
-			});
-			return id;
-		}
-
-		const deleteElement = function(name, type){
-			const elements = getElements(type);
-			const dEl = getElementId(name, type);
-			if(dEl!=-1){
-				elements.splice(elements.findIndex(el=>el.id===dEl),1);
-				deleteMethod(type, dEl);
-				dataRaw[type]=elements;
-				classifyInfo(dataRaw);
+			const editElement = function(type, ...args){
+				try{
+					const oldElements = getElements(type);
+					const newElements=oldElements;
+					const id = getElementId(args[0], type)
+					let newElement={};
+					if(type==='clasificaciones'&&args.length===2){
+						newElement={'id':id, 'nombre':args[1]} 
+					} else if(type==='peliculas'&&args.length===4){
+						console.log(args[0]);
+						console.log(args[1]);
+						newElement={'id':id,'nombre':args[1],'director':args[2], 'clasificacion':args[3]};			
+					} else {
+						throw new Error('Bad parameter pass.')
+					}
+					console.log("Elemento editado");
+					console.log(newElement);
+					const index=newElements.findIndex(el=>el.id===id);
+					newElements[index]=newElement;				
+					const newList = dataRaw;
+					newList[type]=newElements;
+					classifyInfo(newList);
+					postMethod(type, newElements[index], id);
+					dataRaw=newList;
+				}catch(err){console.error(err.message);}
 			}
-			else{
-				console.error('Element does not exist');
-			}
-		}
-
-		const editElement = function(type, ...args){
-			try{
-				const oldElements = getElements(type);
-				const newElements=oldElements;
-				const id = getElementId(args[0], type)
-				let newElement={};
-				if(type==='clasificaciones'&&args.length===2){
-					newElement={'id':id, 'nombre':args[1]} 
-				} else if(type==='peliculas'&&args.length===4){
-					console.log(args[0]);
-					console.log(args[1]);
-					newElement={'id':id,'nombre':args[1],'director':args[2], 'clasificacion':args[3]};			
-				} else {
-					throw new Error('Bad parameter pass.')
-				}
-				console.log("Elemento editado");
-				console.log(newElement);
-				const index=newElements.findIndex(el=>el.id===id);
-				newElements[index]=newElement;				
-				const newList = dataRaw;
-				newList[type]=newElements;
-				classifyInfo(newList);
-				postMethod(type, newElements[index], id);
-				dataRaw=newList;
-			}catch(err){console.error(err.message);}
-		}
-
-	</script>
-</head>
-<body>
-	<header>
-			<h1>WeinmanClub</h1>
-			<h2>Movies. Movies Everywhere</h2>
-		<nav></nav>
-	</header>
-	<main>
-		<section>
-			<article>
-				<p>Párrafo sobre lo guays que somos. Añadir un subtítulo h3
-				</p>
-			</article>
-		</section>
-		<section>
-			<ul id="movieList">
-				<li>Lista de pelis traídas desde mock server</li>
-			</ul>
-		</section>
-	</main>
-	<footer>
-		Done by Weinman. No copyright, no copyleft. Pure copycenter.
-	</footer>
-</body>
+		</script>
+		<link rel="stylesheet" href="styles.css"></style>
+	</head>
+	<body>
+		<header id="header" class="header">
+				<h1 id="header_title" class="title">WeinmanClub</h1>
+				<h2 id="header_subtitle" class="subtitle">Movies. Movies Everywhere</h2>
+			<nav id="header_demoNav" class="demoNav">
+				<p>Here goes some menu options</p>
+			</nav>
+		</header>
+		<div id="left_aside_top" class="picture_container"></div>	
+		<main id="mainBody" class="mainBody">
+			<section id="mainBody_aboutUs" class="nonImportant">
+				<article id="mainBody_aboutUs_articleOne" class="nonImportantArticle">
+					<h3 id="mainBody_aboutUs_articleOne_unimportantH3" class="unimportantH3">Rent and buy movies</h3>
+					<p id="mainBody_aboutUs_articleOne_unimportant_p1" class="unimportantP">Hello there, we have movies for rental and sell. We also buy old movies 
+					because we are movie maniacs. <span>And now, some lore ipsum stuff</span>
+					</p>
+					<p id="mainBody_aboutUs_articleOne_unimportant_p2" class="unimportantP">Cras quis tristique risus. Fusce efficitur tellus eget vestibulum pretium. In hac habitasse platea dictumst. Suspendisse potenti. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec quam dolor, pharetra nec velit nec, dapibus interdum orci. Proin et imperdiet tortor, at dignissim neque. In malesuada lectus ut risus auctor, vitae molestie tellus gravida. Nam nisl ipsum, fringilla in feugiat sit amet, fringilla nec est. Sed maximus at magna ac cursus. Suspendisse blandit hendrerit orci, at hendrerit leo sollicitudin et. Cras bibendum tempor libero, et mollis ex pulvinar sit amet. Vivamus sit amet lorem tempus, finibus ipsum in, pretium turpis. In sollicitudin tincidunt dapibus. Maecenas efficitur enim sapien, congue vestibulum lacus tristique nec.</p>
+				</article>
+			</section>
+			<section id="mainBody_movies" class="important">
+				<ul id="mainBody_movies_movieList" class="important_ul">
+				</ul>
+				<p id="mainBody_movies_p" class="important_p">Since this page was created for the API purpose, no roles are created. I could. However, I am doing that with React, Vue and Angular apps. Enjoy managing this web as if you were the owner.</p>
+			</section>
+		</main>
+		<div id="right_aside_top" class="picture_container"></div>
+		<div id="left_bottom_aside" class="picture_container"></div>
+		<footer id="aboutMe" class="final_footer">
+			Done by Weinman. No copyright, no copyleft. Pure copycenter.
+			<a id="aboutMe_contributor" href='https://www.freepik.es/vectores/fondo'>Image done by starline - www.freepik.es</a>
+		</footer>
+		<div id="left_bottom_aside" class="picture_container"></div>
+	</body>
 </html>
