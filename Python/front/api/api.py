@@ -3,7 +3,6 @@ import requests as req
 
 def getMethod(name):
     print("Requesting " + name)
-    elements=''
     if name == None or name == '':
         resp = req.get('http://localhost:3000').json()
     else: 
@@ -15,34 +14,46 @@ def getMethod(name):
 # If simple quotes are used, replace simple quotes by double instead
 # TODO: Create a model to guarantee that receiving and sending objects
 # are as they should be.
-def postMethod(element, id):
-    print("Sending element "+id)
-    treatedElement=''
+def postMethod(name,element,id):
+    print("Sending element "+str(id))
     if "\'" in element:
         print(True)
         treatedElement = element.replace("'", '"')
     else:
         treatedElement = element
     try:
-        pyObject=json.loads(treatedElement)
+        print(treatedElement)
+        objSend=json.loads(treatedElement)
+        print(objSend)
+        urlAdd = "http://localhost:3000/"+name+"/"+str(id)
+        resp=req.post(urlAdd, json=objSend)
+        print(resp.json())
     except:
-        print('Access except\n Not a correct format.')
-    print(pyObject)    
+        print('I am a simple API.\nI do not handle exceptions T_T')
+   
+    finally:
+        print('Everything ok?')
     
     
-def putMethod():
-    print("Sending element "+id)
-    treatedElement=''
+def putMethod(name, element, id):
+    print("Sending element "+str(id))
     if "\'" in element:
         print(True)
         treatedElement = element.replace("'", '"')
     else:
         treatedElement = element
     try:
-        pyObject=json.loads(treatedElement)
+        print(treatedElement)
+        objSend=json.loads(treatedElement)
+        print(objSend)
+        urlAdd = "http://localhost:3000/"+name+"/"+str(id)
+        resp=req.post(urlAdd, json=objSend)
+        print(resp.json())
     except:
-        print('Access except\n Not a correct format.')
-    print(pyObject)    
+        print('I am a simple API.\nI do not handle exceptions T_T')
+   
+    finally:
+        print('Everything ok?')
     
 def deleteMethod():
     
