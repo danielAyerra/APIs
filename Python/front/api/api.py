@@ -1,12 +1,14 @@
 import json
 import requests as req
 
+urlBAddr = 'http://localhost:3000/'
+
 def getMethod(name):
     print("Requesting " + name)
     if name == None or name == '':
-        resp = req.get('http://localhost:3000').json()
+        resp = req.get(urlBAddr).json()
     else: 
-        resp = req.get('http://localhost:3000/'+name).json()
+        resp = req.get(urlBAddr+name).json()
     treatResp=json.dumps(resp)
     return treatResp
 
@@ -15,48 +17,53 @@ def getMethod(name):
 # TODO: Create a model to guarantee that receiving and sending objects
 # are as they should be.
 def postMethod(name,element,id):
-    print("Sending element "+str(id))
     if "\'" in element:
         print(True)
+#Make sure that object is double quoted to avoid JSON parser errors
         treatedElement = element.replace("'", '"')
     else:
         treatedElement = element
     try:
-        print(treatedElement)
         objSend=json.loads(treatedElement)
         print(objSend)
-        urlAdd = "http://localhost:3000/"+name+"/"+str(id)
+        urlAdd = urlBAddr+name+"/"+str(id)
         resp=req.post(urlAdd, json=objSend)
         print(resp.json())
+    except json.JSONDecodeError as e:
+        print('Error: '+e.msg)
     except:
-        print('I am a simple API.\nI do not handle exceptions T_T')
-   
-    finally:
-        print('Everything ok?')
+        print('''Unrecognized error. It is not my fault ¯\(¬ ¬)/¯.
+                  Check your server or the connection ;)
+              ''')
     
     
 def putMethod(name, element, id):
-    print("Sending element "+str(id))
     if "\'" in element:
         print(True)
+#Make sure that object is double quoted to avoid JSON parser errors
         treatedElement = element.replace("'", '"')
     else:
         treatedElement = element
     try:
-        print(treatedElement)
         objSend=json.loads(treatedElement)
         print(objSend)
-        urlAdd = "http://localhost:3000/"+name+"/"+str(id)
-        resp=req.post(urlAdd, json=objSend)
+        urlAdd = urlBAddr+name+"/"+str(id)
+        resp=req.put(urlAdd, json=objSend)
+        print(resp.json())
+    except json.JSONDecodeError as e:
+        print('Error: '+e.msg)
+    except:
+        print('''Unrecognized error. It is not my fault ¯\(¬ ¬)/¯.
+                  Check your server or the connection ;)
+              ''')
+    
+def deleteMethod(name,id):
+    try: 
+        urlAdd=urlBAddr+name+"/"+str(id)
+        resp=req.delete(urlAdd)
         print(resp.json())
     except:
-        print('I am a simple API.\nI do not handle exceptions T_T')
-   
-    finally:
-        print('Everything ok?')
-    
-def deleteMethod():
-    
+         print('Unrecognized error. It is not my fault ¯\(¬ ¬)/¯')
     
     
 
