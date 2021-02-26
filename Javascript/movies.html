@@ -18,9 +18,9 @@
 					const classes=data['clasificaciones'];
 					for(let i=0;i<classes.length;i++){
 						const clasMovies = searchInfo(movies, classes[i].nombre);
-						content+=`<li>${classes[i].nombre} <ul>`;
+						content+=`<li><h3>${classes[i].nombre}</h3><ul class=movielist>`;
 						for(let j=0;j<clasMovies.length;j++){
-							content+=`<li><div class='movieCard' id='movie_${clasMovies[j].id}'>
+							content+=`<li><div class='moviecard' id='movie_${clasMovies[j].id}'>
 								<h4>${clasMovies[j].nombre}<h4>
 								<p><span>Director:</span>${clasMovies[j].director}</p>
 								</div>
@@ -122,32 +122,47 @@
 				<h1 id="header_title" class="title">WeinmanClub</h1>
 				<h2 id="header_subtitle" class="subtitle">Movies. Movies Everywhere</h2>
 			<nav id="header_demoNav" class="demoNav">
-				<p>Here goes some menu options</p>
+				<p>Here goes some urls to other pages. (same thing, but bootstrap, etc)</p>
+				<!--When making stuff with bootstrap, jquery, etc, I will add links here-->
 			</nav>
 		</header>
-		<div id="left_aside_top" class="picture_container"></div>	
 		<main id="mainBody" class="mainBody">
-			<section id="mainBody_aboutUs" class="nonImportant">
-				<article id="mainBody_aboutUs_articleOne" class="nonImportantArticle">
-					<h3 id="mainBody_aboutUs_articleOne_unimportantH3" class="unimportantH3">Rent and buy movies</h3>
-					<p id="mainBody_aboutUs_articleOne_unimportant_p1" class="unimportantP">Hello there, we have movies for rental and sell. We also buy old movies 
-					because we are movie maniacs. <span>And now, some lore ipsum stuff</span>
-					</p>
-					<p id="mainBody_aboutUs_articleOne_unimportant_p2" class="unimportantP">Cras quis tristique risus. Fusce efficitur tellus eget vestibulum pretium. In hac habitasse platea dictumst. Suspendisse potenti. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec quam dolor, pharetra nec velit nec, dapibus interdum orci. Proin et imperdiet tortor, at dignissim neque. In malesuada lectus ut risus auctor, vitae molestie tellus gravida. Nam nisl ipsum, fringilla in feugiat sit amet, fringilla nec est. Sed maximus at magna ac cursus. Suspendisse blandit hendrerit orci, at hendrerit leo sollicitudin et. Cras bibendum tempor libero, et mollis ex pulvinar sit amet. Vivamus sit amet lorem tempus, finibus ipsum in, pretium turpis. In sollicitudin tincidunt dapibus. Maecenas efficitur enim sapien, congue vestibulum lacus tristique nec.</p>
-				</article>
-			</section>
-			<section id="mainBody_movies" class="important">
-				<ul id="mainBody_movies_movieList" class="important_ul">
-				</ul>
-				<p id="mainBody_movies_p" class="important_p">Since this page was created for the API purpose, no roles are created. I could. However, I am doing that with React, Vue and Angular apps. Enjoy managing this web as if you were the owner.</p>
-			</section>
+			<aside class="picture-small" id="top-left"></aside>
+			<aside class="picture-main" id="main-left"></aside>
+			<aside class="picture-small" id="top-right"></aside>
+			<aside class="picture-main" id="main-right"></aside>
+			<div class=gridfit>
+				<section id="mainBody_aboutUs" class="nonImportant">
+					<article id="mainBody_aboutUs_articleOne" class="nonImportantArticle">
+						<h3 id="mainBody_aboutUs_articleOne_unimportantH3" class="unimportantH3">Rent and buy movies</h3>
+						<p id="mainBody_aboutUs_articleOne_unimportant_p1" class="unimportantP">Hello there, we have movies for rental and sell. We also buy old movies 
+						because we are movie maniacs. <span>And now, some lore ipsum stuff</span>
+						</p>
+						<p id="mainBody_aboutUs_articleOne_unimportant_p2" class="unimportantP">Cras quis tristique risus. Fusce efficitur tellus eget vestibulum pretium. In hac habitasse platea dictumst. Suspendisse potenti. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec quam dolor, pharetra nec velit nec, dapibus interdum orci. Proin et imperdiet tortor, at dignissim neque. In malesuada lectus ut risus auctor, vitae molestie tellus gravida. Nam nisl ipsum, fringilla in feugiat sit amet, fringilla nec est. Sed maximus at magna ac cursus. Suspendisse blandit hendrerit orci, at hendrerit leo sollicitudin et. Cras bibendum tempor libero, et mollis ex pulvinar sit amet. Vivamus sit amet lorem tempus, finibus ipsum in, pretium turpis. In sollicitudin tincidunt dapibus. Maecenas efficitur enim sapien, congue vestibulum lacus tristique nec.</p>
+					</article>
+				</section>
+				<section id="mainBody_movies" class="important">
+					<ul id="mainBody_movies_movieList" class="important_ul">
+					</ul>
+					<p id="mainBody_movies_p" class="important_p">Since this page was created for the API purpose, no roles are created. I could. However, I am doing that with React, Vue and Angular apps. Enjoy managing this web as if you were the owner.</p>
+				</section>
+				<section id=mainbody_adminfeatures class="important_form">
+					<input id="adminEnable" type="checkbox" name="adminEnable"/>
+					<form class="admin" id="adminControl">
+						<p><strong>Instructions</strong>: For editing or deleting a movie, please click on the desired movie card. For creating a new one, just type the parameters.</p>
+						<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
+						<label for="director"><span>Director</span><input type="text" name="director"/></label>
+						<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+						<textarea rows=1 cols=4 readonly></textarea>
+					</form>
+				</section>
+			</div>
 		</main>
-		<div id="right_aside_top" class="picture_container"></div>
-		<div id="left_bottom_aside" class="picture_container"></div>
 		<footer id="aboutMe" class="final_footer">
-			Done by Weinman. No copyright, no copyleft. Pure copycenter.
-			<a id="aboutMe_contributor" href='https://www.freepik.es/vectores/fondo'>Image done by starline - www.freepik.es</a>
+			<aside class="picture-small" id="bottom-left"></aside>
+			<aside class="picture-small" id="bottom-right"></aside>
+				<p>Done by Weinman. No copyright, no copyleft. Pure copycenter.</p>
+				<a id="aboutMe_contributor" href='https://www.freepik.es/vectores/fondo'>Image done by starline - www.freepik.es</a></div>
 		</footer>
-		<div id="left_bottom_aside" class="picture_container"></div>
 	</body>
 </html>
