@@ -114,6 +114,18 @@
 					dataRaw=newList;
 				}catch(err){console.error(err.message);}
 			}
+
+			const toggleHidden = function(){
+				const check = document.getElementById('adminEnable');
+				const form = document.getElementById('adminControl');
+				if(check.checked===true){
+					form.hidden=false;
+				}
+				else{
+					form.hidden=true;
+				}
+
+			}
 		</script>
 		<link rel="stylesheet" href="styles.css"></style>
 	</head>
@@ -147,13 +159,13 @@
 					<p id="mainBody_movies_p" class="important_p">Since this page was created for the API purpose, no roles are created. I could. However, I am doing that with React, Vue and Angular apps. Enjoy managing this web as if you were the owner.</p>
 				</section>
 				<section id=mainbody_adminfeatures class="important_form">
-					<input id="adminEnable" type="checkbox" name="adminEnable"/>
-					<form class="admin" id="adminControl">
+					<input id="adminEnable" type="checkbox" name="adminEnable" onclick='toggleHidden()' />
+					<form class="admin" id="adminControl" hidden>
 						<p><strong>Instructions</strong>: For editing or deleting a movie, please click on the desired movie card. For creating a new one, just type the parameters.</p>
+						<label for="idMovie" id="idMovie"><span>Id</span><textarea rows=1 cols=4 readonly></textarea></label>
 						<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
 						<label for="director"><span>Director</span><input type="text" name="director"/></label>
 						<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
-						<textarea rows=1 cols=4 readonly></textarea>
 					</form>
 				</section>
 			</div>
@@ -161,8 +173,10 @@
 		<footer id="aboutMe" class="final_footer">
 			<aside class="picture-small" id="bottom-left"></aside>
 			<aside class="picture-small" id="bottom-right"></aside>
+			<div>
 				<p>Done by Weinman. No copyright, no copyleft. Pure copycenter.</p>
-				<a id="aboutMe_contributor" href='https://www.freepik.es/vectores/fondo'>Image done by starline - www.freepik.es</a></div>
+				<a id="aboutMe_contributor" href='https://www.freepik.es/vectores/fondo'>Image done by starline - www.freepik.es</a>
+			</div>
 		</footer>
 	</body>
 </html>
