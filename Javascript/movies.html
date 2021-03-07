@@ -63,7 +63,6 @@
 				console.log(args);
 				console.log(args.length);
 				console.log(type);
-
 				try{
 					const oldElements = getElements(type);
 					const newElements=oldElements;
@@ -84,9 +83,10 @@
 				}catch(err){console.error(err.message);}
 			}
 
-			const addMovie = function(movieForm){
-				console.log(movieForm[1].value);
-				const movie = [];
+			const addMovie = function(){
+				const movieForm = document.getElementById("adminControl_addMovie");
+				console.log(movieForm);
+				const movie = []
 				if(movieForm[1].value==='' || movieForm[2].value==='' || movieForm[3].value===''){
 					window.alert('Missing data. Operation aborted.');
 				}
@@ -228,8 +228,7 @@
 									<select name="clasificacion" id="selClasificaciones">
 									</select>
 								</label>
-								<button onclick="addMovie(this)"></button>
-								<input type="submit" value="Add Movie"/>
+								<button onclick="addMovie()">Añadir</button>
 						</fieldset>							
 					</form>
 					<form class="admin" id="adminControl_edDelMovie" hidden>
@@ -239,7 +238,7 @@
 								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
 								<label for="director"><span>Director</span><input type="text" name="director"/></label>
 								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
-								<button onclick="deleteMovie()">Delete</button>
+								<button onclick="deleteMovie(this)">Delete</button>
 								<button onclick="editMovie(this)">Editar</button>
 						</fieldset>			
 					</form>
