@@ -28,6 +28,8 @@ router.post('/:type/:id', function (req, res, next) {
 	if(mockData.hasOwnProperty(reqType)){
 		const index = mockData[reqType].indexOf(el=>el.id===id);
 		mockData[reqType][index]=rawData;
+		console.log(rawData);
+		console.log(index);
 		res.status(200).json({message: "Edited Succesfully"});	}
 	else{
 		res.status(400).json({message:"Unrecognized request"});
@@ -38,7 +40,10 @@ router.put('/:type/:id', function (req, res, next) {
 	const reqType = req.params.type;
 	const id = req.params.id;
 	const rawData = req.body;
+	console.log('Accessed put method');
 	if(mockData.hasOwnProperty(reqType)){
+		console.log(rawData);
+		console.log(reqType);
 		mockData[reqType].push(rawData);
 		res.status(200).json({message: "Added Succesfully"});
 	}
