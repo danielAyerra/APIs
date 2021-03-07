@@ -202,6 +202,14 @@ ul {
 	margin=0;
 }
 
+.important_form {
+	display:flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 436px;
+	align-items: baseline;
+}
+
 form {
 	display: flex;
 	flex-flow: column;

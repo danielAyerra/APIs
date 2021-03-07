@@ -285,8 +285,24 @@
 								<label for="clasificacion"><span>Clasificacion</span><select name="clasificacion" id="selClasificacionesEdDel">
 									</select>
 								<button onclick="deleteMovie()">Delete</button>
-								<button onclick="editMovie(this)">Editar</button>
+								<button onclick="editMovie()">Editar</button>
 						</fieldset>			
+					</form>
+					<form class="admin" id="adminControl_addCat" hidden>
+						<fieldset hidden id="adminControl_addCat_Fieldset">
+							<legend>Add a category</legend>
+							<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
+							<button onclick="addCategory()">Añadir</button>
+						</fieldset>
+					</form>
+					<form class="admin" id="adminControl_edDelCat" hidden>
+						<fieldset hidden id="adminControl_edDelCat_Fieldset">
+							<legend>Edit or delete a movie</legend>
+								<label for="idMovie" id="idMovie"><span>Id</span><textarea rows=1 cols=4 readonly></textarea></label>
+								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
+								<button onclick="deleteCategory()">Delete</button>
+								<button onclick="editCaegory()">Editar</button>
+						</fieldset>
 					</form>
 				</section>
 			</div>
