@@ -6,10 +6,31 @@
 		<script type="text/javascript" src="requestAPI.js"></script>
 		<script type="text/javascript">
 			let dataRaw;
+			let selected;
+			/*Why using getCategories when there is getElements method?
+			This is done because whenever the page is loaded, there is still no guarantee that dataRaw
+			has already the values. So, the data treated is the source, making sure something is loaded.
+			And, for further requests, dataRaw can be consulted.*/
 			window.onload = async function(){
 				const res = await getMethod();
 				dataRaw = res;
 				classifyInfo(res);
+				loadSelect(res);
+			}
+
+			const getCategories = function(data){
+
+				return data.clasificaciones;
+			}
+
+			const loadSelect = function(data){
+				const selList = document.getElementById('selClasificaciones');
+				const categoryList = getCategories(data);
+				let content='<option value="" selected disabled>--------</option>';
+				categoryList.forEach(x=>{
+					content+=`<option value="${x.nombre}">${x.nombre}</option>`;
+				});
+				selList.innerHTML=content;
 			}
 
 			const classifyInfo = function(data){
@@ -22,8 +43,8 @@
 						content+=`<li><h3>${classes[i].nombre}</h3><ul class=movielist>`;
 						for(let j=0;j<clasMovies.length;j++){
 							content+=`<li><div class='moviecard' id='movie_${clasMovies[j].id}'>
-								<h4>${clasMovies[j].nombre}<h4>
-								<p><span>Director:</span>${clasMovies[j].director}</p>
+								<h4>Título: ${clasMovies[j].nombre}<h4>
+								<p><span>Director: </span>${clasMovies[j].director}</p>
 								</div>
 								</li>`;
 						}
@@ -39,6 +60,10 @@
 			}
 
 			const addElement = function(type, ...args){//nombre, director, clasificación
+				console.log(args);
+				console.log(args.length);
+				console.log(type);
+
 				try{
 					const oldElements = getElements(type);
 					const newElements=oldElements;
@@ -61,12 +86,16 @@
 
 			const addMovie = function(movieForm){
 				console.log(movieForm[1].value);
-				if(movieForm[1].value==='' || movie[2].value==='' || movie[3].value===''){
+				const movie = [];
+				if(movieForm[1].value==='' || movieForm[2].value==='' || movieForm[3].value===''){
 					window.alert('Missing data. Operation aborted.');
 				}
 				else{
-					const movie = [movieForm[1].value, movie[2].value, movie[3].value]
-					addElement('peliculas', movie);
+					for(i=1;i<=3;i++){
+						movie.push(movieForm[i].value);
+					}
+					console.log(movieForm[3]);
+					addElement('peliculas', movie[0], movie[1], movie[2]);
 				}
 			}
 
@@ -97,6 +126,15 @@
 				}
 				else{
 					console.error('Element does not exist');
+				}
+			}
+
+			const deleteMovie = function(){
+				if(selected!=undefined){
+					deleteElement(selected.nombre, 'peliculas');
+				}
+				else{
+					window.alert('Movie does not exist');
 				}
 			}
 
@@ -133,9 +171,6 @@
 				const formAdminEdDel = document.getElementById('adminControl_edDelMovie');
 				const formAdminAddFieldset = document.getElementById('adminControl_addMovie_Fieldset');
 				const formAdminEdDelFieldset = document.getElementById('adminControl_edDelMovie_Fieldset');
-
-				console.log(formAdminAdd);
-				console.log(formAdminEdDel);
 				if(check.checked===true){
 					formAdminAdd.hidden=false;
 					formAdminEdDel.hidden=false;
@@ -148,8 +183,8 @@
 					formAdminAddFieldset.hidden=true;
 					formAdminEdDelFieldset.hidden=true;
 				}
-
 			}
+
 		</script>
 		<link rel="stylesheet" href="styles.css"></style>
 	</head>
@@ -184,12 +219,16 @@
 				</section>
 				<section id=mainbody_adminfeatures class="important_form">
 					<input id="adminEnable" type="checkbox" name="adminEnable" onclick='toggleHidden()' />
-					<form class="admin" id="adminControl_addMovie" hidden onsubmit="addMovie(this)">
+					<form class="admin" id="adminControl_addMovie" hidden>
 						<fieldset hidden id="adminControl_addMovie_Fieldset">
 							<legend>Add a movie</legend>
 								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
 								<label for="director"><span>Director</span><input type="text" name="director"/></label>
-								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+								<label for="clasificacion"><span>Clasificacion</span>
+									<select name="clasificacion" id="selClasificaciones">
+									</select>
+								</label>
+								<button onclick="addMovie(this)"></button>
 								<input type="submit" value="Add Movie"/>
 						</fieldset>							
 					</form>
@@ -200,6 +239,8 @@
 								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
 								<label for="director"><span>Director</span><input type="text" name="director"/></label>
 								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+								<button onclick="deleteMovie()">Delete</button>
+								<button onclick="editMovie(this)">Editar</button>
 						</fieldset>			
 					</form>
 				</section>

@@ -11,10 +11,11 @@ body{
 	grid-row-gap:0;
 	grid-column-gap:0;
 	min-width: 742px;
-	
+	background-color: #FAFAFA;	
 }
 
 ul {
+
 	list-style: none;
 }
 
@@ -56,6 +57,7 @@ ul {
 }
 
 .mainBody {
+	background-color: #FAFAFA;
 	font-family: sans-serif;
 	grid-area: main;
 	display: grid;
@@ -73,12 +75,15 @@ ul {
 	grid-row-start: 1;
 	grid-row-end: 3;
 }
+
 .mainBody > section {
 	margin:0;
 	border:0;
+	background-color: #FAFAFA;
 }
 
 .important_ul {
+
 	display: block;
 }
 
@@ -114,10 +119,12 @@ ul {
 }
 
 .picture-main {
+
 	background-repeat: repeat-y;
 }
 
 .picture-small{
+
 	height: 164px;
 }
 #main-left {
@@ -186,7 +193,6 @@ ul {
 	margin=0;
 }
 
-
 form {
 	display: flex;
 	flex-flow: column;
@@ -195,16 +201,16 @@ form {
 }
 
 label > span {
+
 	display: block;
 }
 
 form > label {
+	
 	order:3;
 }
 
 form>p {
+	
 	order:1;
 }
-
-
-
