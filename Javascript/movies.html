@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>Your favourite Videoclub is here!</title>
+	    <meta charset="UTF-8">
 		<script type="text/javascript" src="requestAPI.js"></script>
 		<script type="text/javascript">
 			let dataRaw;
@@ -56,6 +57,17 @@
 					putMethod(type, newElements[newElements.length-1], newElements.length);
 					dataRaw=newList;
 				}catch(err){console.error(err.message);}
+			}
+
+			const addMovie = function(movieForm){
+				console.log(movieForm[1].value);
+				if(movieForm[1].value==='' || movie[2].value==='' || movie[3].value===''){
+					window.alert('Missing data. Operation aborted.');
+				}
+				else{
+					const movie = [movieForm[1].value, movie[2].value, movie[3].value]
+					addElement('peliculas', movie);
+				}
 			}
 
 			const getElements = function(type){
@@ -117,12 +129,24 @@
 
 			const toggleHidden = function(){
 				const check = document.getElementById('adminEnable');
-				const form = document.getElementById('adminControl');
+				const formAdminAdd = document.getElementById('adminControl_addMovie');
+				const formAdminEdDel = document.getElementById('adminControl_edDelMovie');
+				const formAdminAddFieldset = document.getElementById('adminControl_addMovie_Fieldset');
+				const formAdminEdDelFieldset = document.getElementById('adminControl_edDelMovie_Fieldset');
+
+				console.log(formAdminAdd);
+				console.log(formAdminEdDel);
 				if(check.checked===true){
-					form.hidden=false;
+					formAdminAdd.hidden=false;
+					formAdminEdDel.hidden=false;
+					formAdminAddFieldset.hidden=false;
+					formAdminEdDelFieldset.hidden=false;
 				}
 				else{
-					form.hidden=true;
+					formAdminAdd.hidden=true;
+					formAdminEdDel.hidden=true;
+					formAdminAddFieldset.hidden=true;
+					formAdminEdDelFieldset.hidden=true;
 				}
 
 			}
@@ -160,12 +184,23 @@
 				</section>
 				<section id=mainbody_adminfeatures class="important_form">
 					<input id="adminEnable" type="checkbox" name="adminEnable" onclick='toggleHidden()' />
-					<form class="admin" id="adminControl" hidden>
-						<p><strong>Instructions</strong>: For editing or deleting a movie, please click on the desired movie card. For creating a new one, just type the parameters.</p>
-						<label for="idMovie" id="idMovie"><span>Id</span><textarea rows=1 cols=4 readonly></textarea></label>
-						<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
-						<label for="director"><span>Director</span><input type="text" name="director"/></label>
-						<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+					<form class="admin" id="adminControl_addMovie" hidden onsubmit="addMovie(this)">
+						<fieldset hidden id="adminControl_addMovie_Fieldset">
+							<legend>Add a movie</legend>
+								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
+								<label for="director"><span>Director</span><input type="text" name="director"/></label>
+								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+								<input type="submit" value="Add Movie"/>
+						</fieldset>							
+					</form>
+					<form class="admin" id="adminControl_edDelMovie" hidden>
+						<fieldset hidden id="adminControl_edDelMovie_Fieldset">
+							<legend>Edit or delete a movie</legend>
+								<label for="idMovie" id="idMovie"><span>Id</span><textarea rows=1 cols=4 readonly></textarea></label>
+								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
+								<label for="director"><span>Director</span><input type="text" name="director"/></label>
+								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
+						</fieldset>			
 					</form>
 				</section>
 			</div>

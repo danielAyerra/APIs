@@ -114,16 +114,11 @@ ul {
 }
 
 .picture-main {
-	background-size: 100% 100%;
 	background-repeat: repeat-y;
-	position:relative;
-	top: -575px;
-	left: 0;
 }
 
 .picture-small{
 	height: 164px;
-
 }
 #main-left {
 	background-image: url("6354-1.jpg");
@@ -170,8 +165,6 @@ ul {
 	font-family: sans-serif;
 	grid-area: footer;
 	text-align: center;
-	color: white;
-	background-color: #2E2E2E;
 	display:grid;
 	grid-template-columns: 258px auto 258px;
 	grid-template-rows: 115px;
@@ -193,12 +186,14 @@ ul {
 	margin=0;
 }
 
+
 form {
 	display: flex;
 	flex-flow: column;
 	align-items: center;
 	justify-content: center;
 }
+
 label > span {
 	display: block;
 }
@@ -211,9 +206,5 @@ form>p {
 	order:1;
 }
 
-#idMovie {
-	position:relative;
-	left:-62px;
-}
 
 
