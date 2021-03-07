@@ -101,6 +101,7 @@ ul {
 }
 
 .moviecard {
+	padding: 5px;
 	margin:30px;
 	border: solid;
 	border-color: black;
@@ -109,6 +110,14 @@ ul {
 	height: 120px;
 	color:white;
 	background-color: darkgrey;
+}
+
+.moviecard:click {
+	background-color: black;
+}
+
+.moviecard:hover {
+	color:red;
 }
 
 .picture-main, .picture-small {

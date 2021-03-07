@@ -25,12 +25,14 @@
 
 			const loadSelect = function(data){
 				const selList = document.getElementById('selClasificaciones');
+				const selListEdDel = document.getElementById('selClasificacionesEdDel');
 				const categoryList = getCategories(data);
 				let content='<option value="" selected disabled>--------</option>';
 				categoryList.forEach(x=>{
 					content+=`<option value="${x.nombre}">${x.nombre}</option>`;
 				});
 				selList.innerHTML=content;
+				selListEdDel.innerHTML=content;
 			}
 
 			const classifyInfo = function(data){
@@ -42,8 +44,8 @@
 						const clasMovies = searchInfo(movies, classes[i].nombre);
 						content+=`<li><h3>${classes[i].nombre}</h3><ul class=movielist>`;
 						for(let j=0;j<clasMovies.length;j++){
-							content+=`<li><div class='moviecard' id='movie_${clasMovies[j].id}'>
-								<h4>Título: ${clasMovies[j].nombre}<h4>
+							content+=`<li><div class='moviecard' id='movie_${clasMovies[j].id}' onclick='selectMovie(this)'>
+								<h4><span>Título: </span>${clasMovies[j].nombre}<h4>
 								<p><span>Director: </span>${clasMovies[j].director}</p>
 								</div>
 								</li>`;
@@ -57,6 +59,37 @@
 			const searchInfo = function(data, term){
 				const returnElement = data.filter(el=>el['clasificacion']==term);
 				return returnElement;
+			}
+
+			const selectMovie = function(card){
+				const text=card.innerText;
+				const id = card.id.split('_')[1];
+				const arrText=text.split(':');
+				arrText.splice(0,1);
+				let term = arrText[0];
+				term=term.trimStart();
+				term=term.split('\n')[0];
+				selected=dataRaw['peliculas'].find(el=>el.nombre===term && el.id==id);
+				showSelected();
+			}
+
+			const showSelected = function(){
+				console.log(selected);
+				const selectedForm = document.getElementById('adminControl_edDelMovie');
+				console.log(selectedForm);
+				console.log(selectedForm[4]);
+				if (selected===undefined){
+					selectedForm[1].value='';
+					selectedForm[2].value='';
+					selectedForm[3].value='';
+					selectedForm[4].value='';
+
+				} else {
+					selectedForm[1].value=selected.id;
+					selectedForm[2].value=selected.nombre;
+					selectedForm[3].value=selected.director;
+					selectedForm[4].value=selected.clasificacion;
+				}
 			}
 
 			const addElement = function(type, ...args){//nombre, director, clasificación
@@ -132,6 +165,8 @@
 			const deleteMovie = function(){
 				if(selected!=undefined){
 					deleteElement(selected.nombre, 'peliculas');
+					selected=undefined;
+					showSelected();
 				}
 				else{
 					window.alert('Movie does not exist');
@@ -163,6 +198,16 @@
 					postMethod(type, newElements[index], id);
 					dataRaw=newList;
 				}catch(err){console.error(err.message);}
+			}
+
+			const editMovie = function(){
+				const edDelMovieForm=document.getElementById('adminControl_edDelMovie');
+				const movie = {nombre:edDelMovieForm[2].value, director:edDelMovieForm[3].value, clasificacion:edDelMovieForm[4].value};
+				const oldName = selected.nombre;
+				console.log(movie);
+				console.log(oldName);
+				editElement('peliculas', oldName, movie.nombre, movie.director, movie.clasificacion);
+				window.alert('Película editada');
 			}
 
 			const toggleHidden = function(){
@@ -237,8 +282,9 @@
 								<label for="idMovie" id="idMovie"><span>Id</span><textarea rows=1 cols=4 readonly></textarea></label>
 								<label for="nombre"><span>Nombre</span><input type="text" name="nombre"/></label>
 								<label for="director"><span>Director</span><input type="text" name="director"/></label>
-								<label for="clasificacion"><span>Clasificacion</span><input type="text" name="clasificacion"/></label>
-								<button onclick="deleteMovie(this)">Delete</button>
+								<label for="clasificacion"><span>Clasificacion</span><select name="clasificacion" id="selClasificacionesEdDel">
+									</select>
+								<button onclick="deleteMovie()">Delete</button>
 								<button onclick="editMovie(this)">Editar</button>
 						</fieldset>			
 					</form>
